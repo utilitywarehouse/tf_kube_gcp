@@ -1,0 +1,28 @@
+resource "google_compute_http_health_check" "kubelet" {
+  name        = "kubelet-http-health-check"
+  timeout_sec = 5
+
+  // Allow 30 seconds before declaring unhealthy
+  check_interval_sec  = 10
+  unhealthy_threshold = 3
+
+  // Default port for kubelet checks
+  port         = "10248"
+  request_path = "/healthz"
+}
+
+resource "google_compute_firewall" "allow-kubelet-health-checks" {
+  name      = "kubelet-health-check"
+  network   = "${var.network_link}"
+  direction = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["10248"]
+  }
+
+  //  https://cloud.google.com/compute/docs/load-balancing/health-checks
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16", "209.85.152.0/22", "209.85.204.0/22"]
+
+  target_tags = ["kubelet", "${var.cluster_name}"]
+}
