@@ -10,12 +10,8 @@ resource "google_service_account_key" "k8s-worker-key" {
 }
 
 // Worker Instances
-resource "random_id" "worker_template" {
-  byte_length = 8
-}
-
 resource "google_compute_instance_template" "worker" {
-  name                 = "worker-${var.cluster_name}-${random_id.master_template.dec}"
+  name_prefix          = "worker-${var.cluster_name}-"
   instance_description = "worker k8s instance"
   machine_type         = "${var.worker_instance_type}"
 

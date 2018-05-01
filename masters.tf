@@ -10,12 +10,9 @@ resource "google_service_account_key" "k8s-master-key" {
 }
 
 // Master Instances
-resource "random_id" "master_template" {
-  byte_length = 8
-}
 
 resource "google_compute_instance_template" "master" {
-  name                 = "master-${var.cluster_name}-${random_id.master_template.dec}"
+  name_prefix          = "master-${var.cluster_name}-"
   instance_description = "master k8s instance"
   machine_type         = "${var.master_instance_type}"
 
