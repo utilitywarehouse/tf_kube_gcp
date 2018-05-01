@@ -9,6 +9,12 @@ resource "google_service_account_key" "k8s-worker-key" {
   public_key_type    = "TYPE_X509_PEM_FILE"
 }
 
+// Allow workers to view all resources and data but not modify
+resource "google_project_iam_member" "worker-viewer" {
+  role   = "roles/viewer"
+  member = "serviceAccount:${google_service_account.k8s-worker.email}"
+}
+
 // Worker Instances
 resource "google_compute_instance_template" "worker" {
   name_prefix          = "worker-${var.cluster_name}-"
