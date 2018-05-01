@@ -13,9 +13,20 @@ resource "google_compute_disk" "cfssl-data" {
   }
 }
 
+resource "random_string" "cfssl_suffix" {
+
+  length  = 4
+  special = false
+  upper   = false
+
+  keepers = {
+    userdata = "${var.cfssl_user_data}"
+  }
+}
+
 // Instance
 resource "google_compute_instance" "cfssl" {
-  name        = "cfssl-${var.cluster_name}"
+  name        = "cfssl-${var.cluster_name}-${random_string.cfssl_suffix.result}"
   description = "cfssl box"
 
   machine_type = "${var.cfssl_machine_type}"
