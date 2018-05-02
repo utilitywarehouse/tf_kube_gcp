@@ -9,8 +9,17 @@ resource "google_service_account_key" "k8s-master-key" {
   public_key_type    = "TYPE_X509_PEM_FILE"
 }
 
-// Master Instances
+resource "google_project_iam_member" "master-compute" {
+  role   = "roles/compute.admin"
+  member = "serviceAccount:${google_service_account.k8s-master.email}"
+}
 
+resource "google_project_iam_member" "master-storage" {
+  role   = "roles/storage.admin"
+  member = "serviceAccount:${google_service_account.k8s-master.email}"
+}
+
+// Master Instances
 resource "google_compute_instance_template" "master" {
   name_prefix          = "master-${var.cluster_name}-"
   instance_description = "master k8s instance"
