@@ -1,3 +1,9 @@
+// IAM and Service Account
+resource "google_service_account" "cfssl" {
+  account_id   = "cfssl-${var.cluster_name}"
+  display_name = "service account for cfssl instance"
+}
+
 // Volume
 resource "google_compute_disk" "cfssl-data" {
   name = "cfssl-data-${var.cluster_name}"
@@ -14,7 +20,6 @@ resource "google_compute_disk" "cfssl-data" {
 }
 
 resource "random_string" "cfssl_suffix" {
-
   length  = 4
   special = false
   upper   = false
@@ -29,8 +34,9 @@ resource "google_compute_instance" "cfssl" {
   name        = "cfssl-${var.cluster_name}-${random_string.cfssl_suffix.result}"
   description = "cfssl box"
 
-  machine_type = "${var.cfssl_machine_type}"
-  zone         = "${var.available_zones[0]}"
+  machine_type              = "${var.cfssl_machine_type}"
+  zone                      = "${var.available_zones[0]}"
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
@@ -60,6 +66,11 @@ resource "google_compute_instance" "cfssl" {
 
   metadata {
     user-data = "${var.cfssl_user_data}"
+  }
+
+  service_account {
+    email  = "${google_service_account.cfssl.email}"
+    scopes = []
   }
 }
 
