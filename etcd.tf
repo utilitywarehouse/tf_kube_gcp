@@ -1,3 +1,9 @@
+// IAM and Service Account
+resource "google_service_account" "etcd" {
+  account_id   = "etcd-${var.cluster_name}"
+  display_name = "service account for etcd instances"
+}
+
 // Volumes
 resource "google_compute_disk" "etcd-data" {
   count = "${var.etcd_instance_count}"
@@ -39,8 +45,9 @@ resource "google_compute_instance" "etcd" {
   name        = "etcd-${count.index}-${var.cluster_name}-${random_string.r.*.result[count.index]}"
   description = "etcd cluster member"
 
-  machine_type = "${var.etcd_machine_type}"
-  zone         = "${var.available_zones[count.index]}"
+  machine_type              = "${var.etcd_machine_type}"
+  zone                      = "${var.available_zones[count.index]}"
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
@@ -70,6 +77,11 @@ resource "google_compute_instance" "etcd" {
 
   metadata {
     user-data = "${var.etcd_user_data[count.index]}"
+  }
+
+  service_account {
+    email  = "${google_service_account.etcd.email}"
+    scopes = []
   }
 }
 

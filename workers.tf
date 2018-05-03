@@ -38,7 +38,7 @@ resource "google_compute_instance_template" "worker" {
 
   service_account {
     email  = "${google_service_account.k8s-worker.email}"
-    scopes = ["userinfo-email", "compute-ro", "storage-ro"]
+    scopes = ["compute-ro", "storage-ro"]
   }
 
   tags = ["${concat(list("worker-${var.cluster_name}"), list("kubelet"), var.cluster_instance_tags)}"]
