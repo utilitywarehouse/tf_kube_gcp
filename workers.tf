@@ -79,7 +79,29 @@ resource "google_compute_firewall" "allow-workers-to-talk" {
     protocol = "tcp"
   }
 
+  allow {
+    protocol = "udp"
+  }
+
   source_tags = ["worker-${var.cluster_name}"]
+
+  direction   = "INGRESS"
+  target_tags = ["worker-${var.cluster_name}"]
+}
+
+resource "google_compute_firewall" "allow-masters-to-workers" {
+  name    = "allow-masters-to-workers-${var.cluster_name}"
+  network = "${var.network_link}"
+
+  allow {
+    protocol = "tcp"
+  }
+
+  allow {
+    protocol = "udp"
+  }
+
+  source_tags = ["master-${var.cluster_name}"]
 
   direction   = "INGRESS"
   target_tags = ["worker-${var.cluster_name}"]
