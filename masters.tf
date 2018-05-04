@@ -9,15 +9,24 @@ resource "google_service_account_key" "k8s-master-key" {
   public_key_type    = "TYPE_X509_PEM_FILE"
 }
 
-// Let masters view all resources in the cloud
+// Let master view resources and modify routes, firewalls, and disks 
 resource "google_project_iam_member" "master-viewer" {
   role   = "roles/viewer"
   member = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
-// Let masters administer storage to create disks
+resource "google_project_iam_member" "master-network" {
+  role   = "roles/compute.networkAdmin"
+  member = "serviceAccount:${google_service_account.k8s-master.email}"
+}
+
+resource "google_project_iam_member" "master-security" {
+  role   = "roles/compute.securityAdmin"
+  member = "serviceAccount:${google_service_account.k8s-master.email}"
+}
+
 resource "google_project_iam_member" "master-storage" {
-  role   = "roles/storage.admin"
+  role   = "roles/compute.storageAdmin"
   member = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
@@ -44,7 +53,7 @@ resource "google_compute_instance_template" "master" {
 
   service_account {
     email  = "${google_service_account.k8s-master.email}"
-    scopes = ["compute-ro", "storage-rw"]
+    scopes = ["cloud-platform"]
   }
 
   tags = ["${concat(list("master-${var.cluster_name}"), list("kubelet"), var.cluster_instance_tags)}"]
