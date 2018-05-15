@@ -53,12 +53,17 @@ resource "google_compute_instance_template" "worker" {
   }
 }
 
+resource "google_compute_target_pool" "workers-pool" {
+  name = "workers-pool-${var.cluster_name}"
+}
+
 resource "google_compute_region_instance_group_manager" "workers" {
   name               = "workes-group-manager-${var.cluster_name}"
   base_instance_name = "worker-${var.cluster_name}"
   instance_template  = "${google_compute_instance_template.worker.self_link}"
   region             = "${var.region}"
   target_size        = "${var.worker_instance_count}"
+  target_pools       = ["${google_compute_target_pool.workers-pool.self_link}"]
   update_strategy    = "ROLLING_UPDATE"
 
   rolling_update_policy {
