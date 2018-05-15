@@ -66,6 +66,16 @@ resource "google_compute_region_instance_group_manager" "workers" {
   target_pools       = ["${google_compute_target_pool.workers-pool.self_link}"]
   update_strategy    = "ROLLING_UPDATE"
 
+  named_port {
+    name = "public-http"
+    port = "${var.worker_public_http_port}"
+  }
+
+  named_port {
+    name = "public-https"
+    port = "${var.worker_public_https_port}"
+  }
+
   rolling_update_policy {
     type                  = "PROACTIVE"
     minimal_action        = "REPLACE"

@@ -25,3 +25,11 @@ output "workers_group" {
 output "workers_pool" {
   value = "${google_compute_target_pool.workers-pool.self_link}"
 }
+
+output "worker_public_http_port_name" {
+  value = "public-http"
+}
+
+output "worker_public_https_port_name" {
+  value = "public-https"
+}
