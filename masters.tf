@@ -10,8 +10,8 @@ resource "google_service_account_key" "k8s-master-key" {
 }
 
 // Let master view resources and modify routes, firewalls, and disks 
-resource "google_project_iam_member" "master-viewer" {
-  role   = "roles/viewer"
+resource "google_project_iam_member" "master-compute-viewer" {
+  role   = "roles/compute.viewer"
   member = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 

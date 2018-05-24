@@ -9,9 +9,9 @@ resource "google_service_account_key" "k8s-worker-key" {
   public_key_type    = "TYPE_X509_PEM_FILE"
 }
 
-// Allow workers to view all resources and data but not modify
-resource "google_project_iam_member" "worker-viewer" {
-  role   = "roles/viewer"
+// Allow workers to view all resources but not modify
+resource "google_project_iam_member" "worker-icompute-viewer" {
+  role   = "roles/compute.viewer"
   member = "serviceAccount:${google_service_account.k8s-worker.email}"
 }
 
