@@ -39,6 +39,15 @@ resource "random_string" "r" {
   }
 }
 
+// reserve Ip addresses
+resource "google_compute_address" "etcd_addresses" {
+  count        = "${var.etcd_instance_count}"
+  name         = "etcd-address-${count.index}-${var.cluster_name}"
+  address_type = "INTERNAL"
+  subnetwork   = "${var.subnetwork_link}"
+  address      = "${var.etcd_addresses[count.index]}"
+}
+
 // Instances
 resource "google_compute_instance" "etcd" {
   count       = "${var.etcd_instance_count}"
@@ -65,7 +74,7 @@ resource "google_compute_instance" "etcd" {
 
   network_interface {
     subnetwork = "${var.subnetwork_link}"
-    address    = "${var.etcd_addresses[count.index]}"
+    address    = "${google_compute_address.etcd_addresses.*.address[count.index]}"
   }
 
   tags = ["${concat(list("etcd-${var.cluster_name}"), var.cluster_instance_tags)}"]

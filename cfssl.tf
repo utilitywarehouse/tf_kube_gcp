@@ -29,6 +29,14 @@ resource "random_string" "cfssl_suffix" {
   }
 }
 
+// reserve Ip address
+resource "google_compute_address" "cfssl_server_address" {
+  name         = "cfssl-server-address-${count.index}-${var.cluster_name}"
+  address_type = "INTERNAL"
+  subnetwork   = "${var.subnetwork_link}"
+  address      = "${var.cfssl_server_address}"
+}
+
 // Instance
 resource "google_compute_instance" "cfssl" {
   name        = "cfssl-${var.cluster_name}-${random_string.cfssl_suffix.result}"
@@ -54,7 +62,7 @@ resource "google_compute_instance" "cfssl" {
 
   network_interface {
     subnetwork = "${var.subnetwork_link}"
-    address    = "${var.cfssl_server_address}"
+    address    = "${google_compute_address.cfssl_server_address.address}"
   }
 
   tags = ["${concat(list("cfssl-${var.cluster_name}"), var.cluster_instance_tags)}"]
