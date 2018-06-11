@@ -98,6 +98,11 @@ resource "google_compute_firewall" "allow-workers-to-talk" {
     protocol = "udp"
   }
 
+  // IPIP
+  allow {
+    protocol = "4"
+  }
+
   source_tags = ["worker-${var.cluster_name}"]
 
   direction   = "INGRESS"
@@ -114,6 +119,11 @@ resource "google_compute_firewall" "allow-masters-to-workers" {
 
   allow {
     protocol = "udp"
+  }
+
+  // IPIP
+  allow {
+    protocol = "4"
   }
 
   source_tags = ["master-${var.cluster_name}"]
