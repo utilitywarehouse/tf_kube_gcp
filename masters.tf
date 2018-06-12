@@ -89,15 +89,8 @@ resource "google_compute_region_instance_group_manager" "masters" {
   region             = "${var.region}"
   target_size        = "${var.master_instance_count}"
   target_pools       = ["${google_compute_target_pool.masters-pool.self_link}"]
-  update_strategy    = "ROLLING_UPDATE"
+  update_strategy    = "NONE"
 
-  rolling_update_policy {
-    type                  = "PROACTIVE"
-    minimal_action        = "REPLACE"
-    max_surge_fixed       = "${length(var.available_zones)}"
-    max_unavailable_fixed = "0"
-    min_ready_sec         = "60"
-  }
 }
 
 // Load Balancer
