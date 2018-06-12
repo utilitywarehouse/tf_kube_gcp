@@ -46,6 +46,7 @@ resource "google_compute_instance_template" "worker" {
   labels = {
     cluster = "${var.cluster_name}"
     name    = "${var.cluster_name}-worker"
+    test    = "test"
   }
 
   lifecycle {
@@ -75,7 +76,6 @@ resource "google_compute_region_instance_group_manager" "workers" {
     name = "public-https"
     port = "${var.worker_public_https_port}"
   }
-
 }
 
 // Firewall Rules
