@@ -18,6 +18,10 @@ resource "google_compute_disk" "etcd-data" {
     component = "${var.cluster_name}-etcd"
     cluster   = "${var.cluster_name}"
   }
+
+  lifecycle {
+    ignore_changes = ["snapshot"]
+  }
 }
 
 resource "null_resource" "etcd_data_volume_ids" {
