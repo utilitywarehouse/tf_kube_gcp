@@ -71,6 +71,7 @@ resource "google_compute_instance_template" "master" {
   labels = {
     cluster = "${var.cluster_name}"
     name    = "${var.cluster_name}-master"
+    test    = "test"
   }
 
   lifecycle {
