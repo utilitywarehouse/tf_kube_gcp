@@ -20,6 +20,7 @@ resource "google_compute_instance_template" "worker" {
   name_prefix          = "worker-${var.cluster_name}-"
   instance_description = "worker k8s instance"
   machine_type         = "${var.worker_instance_type}"
+  can_ip_forward       = true
 
   disk {
     source_image = "coreos-cloud/coreos-stable"
@@ -75,7 +76,6 @@ resource "google_compute_region_instance_group_manager" "workers" {
     name = "public-https"
     port = "${var.worker_public_https_port}"
   }
-
 }
 
 // Firewall Rules
