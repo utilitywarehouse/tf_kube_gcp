@@ -45,6 +45,7 @@ resource "google_compute_instance_template" "master" {
   name_prefix          = "master-${var.cluster_name}-"
   instance_description = "master k8s instance"
   machine_type         = "${var.master_instance_type}"
+  can_ip_forward       = true
 
   disk {
     source_image = "coreos-cloud/coreos-stable"
@@ -90,7 +91,6 @@ resource "google_compute_region_instance_group_manager" "masters" {
   target_size        = "${var.master_instance_count}"
   target_pools       = ["${google_compute_target_pool.masters-pool.self_link}"]
   update_strategy    = "NONE"
-
 }
 
 // Load Balancer
