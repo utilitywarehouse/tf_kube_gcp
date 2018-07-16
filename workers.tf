@@ -76,6 +76,11 @@ resource "google_compute_region_instance_group_manager" "workers" {
     name = "public-https"
     port = "${var.worker_public_https_port}"
   }
+
+  named_port {
+    name = "public-dns"
+    port = "${var.worker_public_dns_port}"
+  }
 }
 
 // Firewall Rules
