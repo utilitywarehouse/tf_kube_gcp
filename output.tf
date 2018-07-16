@@ -33,3 +33,7 @@ output "worker_public_http_port_name" {
 output "worker_public_https_port_name" {
   value = "public-https"
 }
+
+output "worker_public_dns_port_name" {
+  value = "public-dns"
+}
