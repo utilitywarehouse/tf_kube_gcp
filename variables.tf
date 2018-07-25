@@ -116,8 +116,3 @@ variable "worker_public_https_port" {
   description = "worker-https port for workers instances to receive https traffic"
   default     = "30143"
 }
-
-variable "worker_public_dns_port" {
-  description = "worker-dns port for workers instances to receive DNS traffic"
-  default = "32253"
-}
