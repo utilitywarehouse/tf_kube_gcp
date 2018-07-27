@@ -33,3 +33,11 @@ output "worker_public_http_port_name" {
 output "worker_public_https_port_name" {
   value = "public-https"
 }
+
+output "worker_telecom_public_http_port_name" {
+  value = "telecom-public-http"
+}
+
+output "worker_telecom_public_https_port_name" {
+  value = "telecom-public-https"
+}

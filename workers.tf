@@ -76,6 +76,20 @@ resource "google_compute_region_instance_group_manager" "workers" {
     name = "public-https"
     port = "${var.worker_public_https_port}"
   }
+
+  // Telecom ACS traffic
+  // This is used for non standard TLS termination for ACS service
+  named_port {
+    name = "telecom-public-http"
+    port = "${var.worker_telecom_public_http_port}"
+  }
+
+  named_port {
+    name = "telecom-public-https"
+    port = "${var.worker_telecom_public_https_port}"
+  }
+  // END Telecom ACS traffic
+
 }
 
 // Firewall Rules

@@ -116,3 +116,13 @@ variable "worker_public_https_port" {
   description = "worker-https port for workers instances to receive https traffic"
   default     = "30143"
 }
+
+variable "worker_telecom_public_http_port" {
+  description = "worker-http port for workers instances to receive http traffic for telco traefik"
+  default     = "32180"
+}
+
+variable "worker_telecom_public_https_port" {
+  description = "worker-https port for workers instances to receive https traffic for telco traefik"
+  default     = "32143"
+}

@@ -17,6 +17,8 @@ The input variables are documented in their description and it's best to refer t
 - `workers_pool` - target pool address of the workers
 - `worker_public_http_port_name` - address that workers will accept public http protocol requests
 - `worker_public_https_port_name` - address that workers will accept public https protocol requests
+- `worker_telecom_public_http_port_name` - address that workers will accept public http protocol requests for Telecom ACS traffic
+- `worker_telecom_public_https_port_name` - address that workers will accept public https protocol requests for Telecom ACS traffic
 
 ## Usage
 
