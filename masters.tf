@@ -79,6 +79,19 @@ resource "google_compute_instance_template" "master" {
   }
 }
 
+resource "google_compute_health_check" "apiserver" {
+  name = "apiserver-health-check-${var.cluster_name}"
+
+  check_interval_sec  = 5
+  timeout_sec         = 2
+  healthy_threshold   = 2
+  unhealthy_threshold = 10 # 20 seconds
+
+  tcp_health_check {
+    port = "443"
+  }
+}
+
 resource "google_compute_target_pool" "masters-pool" {
   name = "masters-pool-${var.cluster_name}"
 }
@@ -91,6 +104,11 @@ resource "google_compute_region_instance_group_manager" "masters" {
   target_size        = "${var.master_instance_count}"
   target_pools       = ["${google_compute_target_pool.masters-pool.self_link}"]
   update_strategy    = "NONE"
+
+  auto_healing_policies {
+    health_check      = "${google_compute_health_check.apiserver.self_link}"
+    initial_delay_sec = 300
+  }
 }
 
 // Load Balancer
