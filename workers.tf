@@ -23,7 +23,7 @@ resource "google_compute_instance_template" "worker" {
   can_ip_forward       = true
 
   disk {
-    source_image = "coreos-cloud/coreos-stable"
+    source_image = "projects/coreos-cloud/global/images/family/coreos-stable"
     auto_delete  = true
     boot         = true
     disk_size_gb = "50"

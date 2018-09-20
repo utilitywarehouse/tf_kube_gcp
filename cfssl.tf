@@ -48,7 +48,7 @@ resource "google_compute_instance" "cfssl" {
 
   boot_disk {
     initialize_params {
-      image = "coreos-cloud/coreos-stable"
+      image = "projects/coreos-cloud/global/images/family/coreos-stable"
     }
 
     auto_delete = true
