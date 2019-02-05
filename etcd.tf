@@ -78,7 +78,7 @@ resource "google_compute_instance" "etcd" {
 
   network_interface {
     subnetwork = "${var.subnetwork_link}"
-    address    = "${google_compute_address.etcd_addresses.*.address[count.index]}"
+    network_ip = "${google_compute_address.etcd_addresses.*.address[count.index]}"
   }
 
   tags = ["${concat(list("etcd-${var.cluster_name}"), var.cluster_instance_tags)}"]
