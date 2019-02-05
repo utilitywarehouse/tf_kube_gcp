@@ -62,7 +62,7 @@ resource "google_compute_instance" "cfssl" {
 
   network_interface {
     subnetwork = "${var.subnetwork_link}"
-    address    = "${google_compute_address.cfssl_server_address.address}"
+    network_ip = "${google_compute_address.cfssl_server_address.address}"
   }
 
   tags = ["${concat(list("cfssl-${var.cluster_name}"), var.cluster_instance_tags)}"]
