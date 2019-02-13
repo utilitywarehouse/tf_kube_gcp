@@ -90,7 +90,6 @@ resource "google_compute_region_instance_group_manager" "masters" {
   region             = "${var.region}"
   target_size        = "${var.master_instance_count}"
   target_pools       = ["${google_compute_target_pool.masters-pool.self_link}"]
-  update_strategy    = "NONE"
 }
 
 // Load Balancer
