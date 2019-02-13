@@ -62,7 +62,7 @@ resource "google_compute_instance" "cfssl" {
 
   network_interface {
     subnetwork = "${var.subnetwork_link}"
-    address    = "${google_compute_address.cfssl_server_address.address}"
+    network_ip = "${google_compute_address.cfssl_server_address.address}"
   }
 
   tags = ["${concat(list("cfssl-${var.cluster_name}"), var.cluster_instance_tags)}"]
@@ -137,5 +137,5 @@ resource "google_dns_record_set" "cfssl" {
 
   managed_zone = "${var.dns_zone}"
 
-  rrdatas = ["${google_compute_instance.cfssl.network_interface.0.address}"]
+  rrdatas = ["${google_compute_instance.cfssl.network_interface.0.network_ip}"]
 }

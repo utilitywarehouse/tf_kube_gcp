@@ -78,7 +78,7 @@ resource "google_compute_instance" "etcd" {
 
   network_interface {
     subnetwork = "${var.subnetwork_link}"
-    address    = "${google_compute_address.etcd_addresses.*.address[count.index]}"
+    network_ip = "${google_compute_address.etcd_addresses.*.address[count.index]}"
   }
 
   tags = ["${concat(list("etcd-${var.cluster_name}"), var.cluster_instance_tags)}"]
@@ -154,7 +154,7 @@ resource "google_dns_record_set" "etcd-by-instance" {
 
   managed_zone = "${var.dns_zone}"
 
-  rrdatas = ["${google_compute_instance.etcd.*.network_interface.0.address[count.index]}"]
+  rrdatas = ["${google_compute_instance.etcd.*.network_interface.0.network_ip[count.index]}"]
 }
 
 resource "google_dns_record_set" "etcd-all" {
@@ -164,5 +164,5 @@ resource "google_dns_record_set" "etcd-all" {
 
   managed_zone = "${var.dns_zone}"
 
-  rrdatas = ["${google_compute_instance.etcd.*.network_interface.0.address}"]
+  rrdatas = ["${google_compute_instance.etcd.*.network_interface.0.network_ip}"]
 }
