@@ -65,7 +65,6 @@ resource "google_compute_region_instance_group_manager" "workers" {
   region             = "${var.region}"
   target_size        = "${var.worker_instance_count}"
   target_pools       = ["${google_compute_target_pool.workers-pool.self_link}"]
-  update_strategy    = "NONE"
 
   named_port {
     name = "public-http"

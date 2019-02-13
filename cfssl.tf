@@ -137,5 +137,5 @@ resource "google_dns_record_set" "cfssl" {
 
   managed_zone = "${var.dns_zone}"
 
-  rrdatas = ["${google_compute_instance.cfssl.network_interface.0.address}"]
+  rrdatas = ["${google_compute_instance.cfssl.network_interface.0.network_ip}"]
 }
