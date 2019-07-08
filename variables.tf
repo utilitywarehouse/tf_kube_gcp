@@ -5,7 +5,7 @@ variable "cluster_name" {
 
 variable "cluster_instance_tags" {
   description = "A list of tags for all instances in the cluster"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "dns_zone" {
@@ -22,7 +22,7 @@ variable "region" {
 
 variable "available_zones" {
   description = "A list of zones available under the project"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "network_link" {
@@ -59,7 +59,7 @@ variable "etcd_instance_count" {
 
 variable "etcd_addresses" {
   description = "A list of ip adrresses for etcd instances."
-  type        = "list"
+  type        = list(string)
 }
 
 variable "etcd_machine_type" {
@@ -74,7 +74,7 @@ variable "etcd_data_volume_size" {
 
 variable "etcd_user_data" {
   description = "The user data to provide to the etcd instances."
-  type        = "list"
+  type        = list(string)
 }
 
 // master nodes
