@@ -5,7 +5,7 @@ resource "google_service_account" "k8s-worker" {
 }
 
 resource "google_service_account_key" "k8s-worker-key" {
-  service_account_id = "${google_service_account.k8s-worker.name}"
+  service_account_id = google_service_account.k8s-worker.name
   public_key_type    = "TYPE_X509_PEM_FILE"
 }
 
@@ -19,7 +19,7 @@ resource "google_project_iam_member" "worker-icompute-viewer" {
 resource "google_compute_instance_template" "worker" {
   name_prefix          = "worker-${var.cluster_name}-"
   instance_description = "worker k8s instance"
-  machine_type         = "${var.worker_instance_type}"
+  machine_type         = var.worker_instance_type
   can_ip_forward       = true
 
   disk {
@@ -30,22 +30,22 @@ resource "google_compute_instance_template" "worker" {
   }
 
   network_interface {
-    subnetwork = "${var.subnetwork_link}"
+    subnetwork = var.subnetwork_link
   }
 
-  metadata {
-    user-data = "${var.worker_user_data}"
+  metadata = {
+    user-data = var.worker_user_data
   }
 
   service_account {
-    email  = "${google_service_account.k8s-worker.email}"
+    email  = google_service_account.k8s-worker.email
     scopes = ["compute-ro", "storage-ro"]
   }
 
-  tags = ["${concat(list("worker-${var.cluster_name}"), list("kubelet"), var.cluster_instance_tags)}"]
+  tags = concat(["worker-${var.cluster_name}", "kubelet"], var.cluster_instance_tags)
 
   labels = {
-    cluster = "${var.cluster_name}"
+    cluster = var.cluster_name
     name    = "${var.cluster_name}-worker"
   }
 
@@ -61,26 +61,26 @@ resource "google_compute_target_pool" "workers-pool" {
 resource "google_compute_region_instance_group_manager" "workers" {
   name               = "workes-group-manager-${var.cluster_name}"
   base_instance_name = "worker-${var.cluster_name}"
-  instance_template  = "${google_compute_instance_template.worker.self_link}"
-  region             = "${var.region}"
-  target_size        = "${var.worker_instance_count}"
-  target_pools       = ["${google_compute_target_pool.workers-pool.self_link}"]
+  instance_template  = google_compute_instance_template.worker.self_link
+  region             = var.region
+  target_size        = var.worker_instance_count
+  target_pools       = [google_compute_target_pool.workers-pool.self_link]
 
   named_port {
     name = "public-http"
-    port = "${var.worker_public_http_port}"
+    port = var.worker_public_http_port
   }
 
   named_port {
     name = "public-https"
-    port = "${var.worker_public_https_port}"
+    port = var.worker_public_https_port
   }
 }
 
 // Firewall Rules
 resource "google_compute_firewall" "allow-workers-to-talk" {
   name    = "allow-workers-to-talk-${var.cluster_name}"
-  network = "${var.network_link}"
+  network = var.network_link
 
   allow {
     protocol = "tcp"
@@ -102,7 +102,7 @@ resource "google_compute_firewall" "allow-workers-to-talk" {
 
 resource "google_compute_firewall" "allow-masters-to-workers" {
   name    = "allow-masters-to-workers-${var.cluster_name}"
-  network = "${var.network_link}"
+  network = var.network_link
 
   allow {
     protocol = "tcp"
