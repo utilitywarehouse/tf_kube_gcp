@@ -10,7 +10,7 @@ resource "google_compute_disk" "etcd-data" {
   name  = "etcd-data-${count.index}-${var.cluster_name}"
   zone  = var.available_zones[count.index]
   size  = var.etcd_data_volume_size
-  type  = "pd-standard"
+  type  = "pd-ssd"
 
   // The value can only contain lowercase letters, numeric characters, underscores and dashes
   labels = {
