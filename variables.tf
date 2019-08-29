@@ -1,4 +1,9 @@
 // Common
+variable "coreos_image" {
+  description = "The coreos image to use. Default to the latest from the stable channel"
+  default     = "projects/coreos-cloud/global/images/family/coreos-stable"
+}
+
 variable "cluster_name" {
   description = "An identifier for the cluster"
 }

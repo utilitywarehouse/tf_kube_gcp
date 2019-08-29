@@ -64,7 +64,7 @@ resource "google_compute_instance" "etcd" {
 
   boot_disk {
     initialize_params {
-      image = "projects/coreos-cloud/global/images/family/coreos-stable"
+      image = var.coreos_image
     }
 
     auto_delete = true
