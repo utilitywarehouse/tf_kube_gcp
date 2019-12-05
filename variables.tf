@@ -44,7 +44,7 @@ variable "cfssl_server_address" {
 }
 
 variable "cfssl_machine_type" {
-  default     = "f1-micro"
+  default     = "g1-small"
   description = "The type of cfssl instance to launch."
 }
 
