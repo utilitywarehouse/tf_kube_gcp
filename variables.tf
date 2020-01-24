@@ -111,13 +111,3 @@ variable "worker_instance_type" {
 variable "worker_user_data" {
   description = "The user data to provide to the kube masters."
 }
-
-variable "worker_public_http_port" {
-  description = "worker-http port for workers instances to receive http traffic"
-  default     = "30180"
-}
-
-variable "worker_public_https_port" {
-  description = "worker-https port for workers instances to receive https traffic"
-  default     = "30143"
-}
