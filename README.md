@@ -11,12 +11,6 @@ The input variables are documented in their description and it's best to refer t
 - `master_address` - the endpoint on which the kubernetes api is made available
 - `cfssl_data_volumeid`- id of cfssl persistent volume
 - `etcd_data_volumeids`- list of ids of etcd persistent volumes
-- `masters_group` - group VM management address for masters
-- `masters_pool` - target pool address of the masters
-- `workers_group` - group VM management address for workers
-- `workers_pool` - target pool address of the workers
-- `worker_public_http_port_name` - address that workers will accept public http protocol requests
-- `worker_public_https_port_name` - address that workers will accept public https protocol requests
 
 ## Usage
 
