@@ -48,7 +48,7 @@ resource "google_compute_instance" "cfssl" {
 
   boot_disk {
     initialize_params {
-      image = var.coreos_image
+      image = var.container_linux_image
     }
 
     auto_delete = true

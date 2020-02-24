@@ -64,7 +64,7 @@ resource "google_compute_instance" "etcd" {
 
   boot_disk {
     initialize_params {
-      image = var.coreos_image
+      image = var.container_linux_image
     }
 
     auto_delete = true
