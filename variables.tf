@@ -1,6 +1,6 @@
 // Common
-variable "coreos_image" {
-  description = "The coreos image to use. Default to the latest from the stable channel"
+variable "container_linux_image" {
+  description = "The container linux image to use. Default to the latest from the stable channel"
   default     = "projects/coreos-cloud/global/images/family/coreos-stable"
 }
 

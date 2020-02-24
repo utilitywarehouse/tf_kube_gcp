@@ -23,7 +23,7 @@ resource "google_compute_instance_template" "worker" {
   can_ip_forward       = true
 
   disk {
-    source_image = var.coreos_image
+    source_image = var.container_linux_image
     auto_delete  = true
     boot         = true
     disk_size_gb = "50"
