@@ -57,9 +57,13 @@ resource "google_compute_instance_template" "worker" {
 resource "google_compute_region_instance_group_manager" "workers" {
   name               = "workes-group-manager-${var.cluster_name}"
   base_instance_name = "worker-${var.cluster_name}"
-  instance_template  = google_compute_instance_template.worker.self_link
   region             = var.region
   target_size        = var.worker_instance_count
+
+  version {
+    name               = "workers"
+    instance_template  = google_compute_instance_template.worker.self_link
+  }
 }
 
 // Firewall Rules

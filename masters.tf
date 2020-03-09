@@ -86,10 +86,14 @@ resource "google_compute_target_pool" "masters-pool" {
 resource "google_compute_region_instance_group_manager" "masters" {
   name               = "masters-group-manager-${var.cluster_name}"
   base_instance_name = "master-${var.cluster_name}"
-  instance_template  = google_compute_instance_template.master.self_link
   region             = var.region
   target_size        = var.master_instance_count
   target_pools       = [google_compute_target_pool.masters-pool.self_link]
+
+  version {
+    name               = "masters"
+    instance_template  = google_compute_instance_template.master.self_link
+  }
 }
 
 // Load Balancer
