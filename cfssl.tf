@@ -117,10 +117,10 @@ resource "google_compute_firewall" "allow-workers-to-cfssl" {
   name    = "allow-workers-to-cfssl-${var.cluster_name}"
   network = var.network_link
 
-  // 8888-9 for certs, 9100 for node exporter
+  // 8080 for fluent-bit exporter, 8888-9 for certs, 9100 for node exporter
   allow {
     protocol = "tcp"
-    ports    = ["8888", "8889", "9100"]
+    ports    = ["8080", "8888", "8889", "9100"]
   }
 
   source_tags = ["worker-${var.cluster_name}"]
