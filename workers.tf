@@ -60,9 +60,14 @@ resource "google_compute_region_instance_group_manager" "workers" {
   region             = var.region
   target_size        = var.worker_instance_count
 
+  update_policy {
+    type           = "OPPORTUNISTIC"
+    minimal_action = "REPLACE"
+  }
+
   version {
-    name               = "workers"
-    instance_template  = google_compute_instance_template.worker.self_link
+    name              = "workers"
+    instance_template = google_compute_instance_template.worker.self_link
   }
 }
 
