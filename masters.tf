@@ -90,9 +90,14 @@ resource "google_compute_region_instance_group_manager" "masters" {
   target_size        = var.master_instance_count
   target_pools       = [google_compute_target_pool.masters-pool.self_link]
 
+  update_policy {
+    type           = "OPPORTUNISTIC"
+    minimal_action = "REPLACE"
+  }
+
   version {
-    name               = "masters"
-    instance_template  = google_compute_instance_template.master.self_link
+    name              = "masters"
+    instance_template = google_compute_instance_template.master.self_link
   }
 }
 
