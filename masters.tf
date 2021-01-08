@@ -40,6 +40,11 @@ resource "google_project_iam_member" "master-service-account-user" {
   member = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
+resource "google_project_iam_member" "master-image-user" {
+  role   = "roles/compute.imageUser"
+  member = "serviceAccount:${google_service_account.k8s-master.email}"
+}
+
 // Master Instances
 resource "google_compute_instance_template" "master" {
   name_prefix          = "master-${var.cluster_name}-"

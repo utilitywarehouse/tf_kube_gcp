@@ -15,6 +15,11 @@ resource "google_project_iam_member" "worker-icompute-viewer" {
   member = "serviceAccount:${google_service_account.k8s-worker.email}"
 }
 
+resource "google_project_iam_member" "worker-image-user" {
+  role   = "roles/compute.imageUser"
+  member = "serviceAccount:${google_service_account.k8s-worker.email}"
+}
+
 // Worker Instances
 resource "google_compute_instance_template" "worker" {
   name_prefix          = "worker-${var.cluster_name}-"
