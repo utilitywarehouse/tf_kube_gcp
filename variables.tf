@@ -1,7 +1,7 @@
 // Common
 variable "container_linux_image" {
   description = "The container linux image to use. Default to the latest from the stable channel"
-  default     = "projects/coreos-cloud/global/images/family/coreos-stable"
+  default     = "projects/kinvolk-public/global/images/family/flatcar-stable"
 }
 
 variable "cluster_name" {
