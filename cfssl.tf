@@ -54,6 +54,10 @@ resource "google_compute_instance" "cfssl" {
     auto_delete = true
   }
 
+  lifecycle {
+    ignore_changes = [boot_disk.0.initialize_params.0.image]
+  }
+
   attached_disk {
     source      = google_compute_disk.cfssl-data.self_link
     mode        = "READ_WRITE"
