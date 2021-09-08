@@ -70,6 +70,10 @@ resource "google_compute_instance" "etcd" {
     auto_delete = true
   }
 
+  lifecycle {
+    ignore_changes = [boot_disk.0.initialize_params.0.image]
+  }
+
   attached_disk {
     source      = google_compute_disk.etcd-data[count.index].self_link
     mode        = "READ_WRITE"
