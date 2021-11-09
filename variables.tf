@@ -1,4 +1,8 @@
 // Common
+variable "project_id" {
+  description = "The gcp project id. Required for all google_project_iam_* resources with provider >=v4"
+}
+
 variable "container_linux_image" {
   description = "The container linux image to use. Default to the latest from the stable channel"
   default     = "projects/coreos-cloud/global/images/family/coreos-stable"

@@ -11,33 +11,39 @@ resource "google_service_account_key" "k8s-master-key" {
 
 // Let master view resources and modify routes, firewalls, and disks 
 resource "google_project_iam_member" "master-compute-viewer" {
-  role   = "roles/compute.viewer"
-  member = "serviceAccount:${google_service_account.k8s-master.email}"
+  project = var.project_id
+  role    = "roles/compute.viewer"
+  member  = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
 resource "google_project_iam_member" "master-network" {
-  role   = "roles/compute.networkAdmin"
-  member = "serviceAccount:${google_service_account.k8s-master.email}"
+  project = var.project_id
+  role    = "roles/compute.networkAdmin"
+  member  = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
 resource "google_project_iam_member" "master-security" {
-  role   = "roles/compute.securityAdmin"
-  member = "serviceAccount:${google_service_account.k8s-master.email}"
+  project = var.project_id
+  role    = "roles/compute.securityAdmin"
+  member  = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
 resource "google_project_iam_member" "master-storage" {
-  role   = "roles/compute.storageAdmin"
-  member = "serviceAccount:${google_service_account.k8s-master.email}"
+  project = var.project_id
+  role    = "roles/compute.storageAdmin"
+  member  = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
 resource "google_project_iam_member" "master-instance" {
-  role   = "roles/compute.instanceAdmin.v1"
-  member = "serviceAccount:${google_service_account.k8s-master.email}"
+  project = var.project_id
+  role    = "roles/compute.instanceAdmin.v1"
+  member  = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
 resource "google_project_iam_member" "master-service-account-user" {
-  role   = "roles/iam.serviceAccountUser"
-  member = "serviceAccount:${google_service_account.k8s-master.email}"
+  project = var.project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
 // Master Instances

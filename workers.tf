@@ -11,8 +11,9 @@ resource "google_service_account_key" "k8s-worker-key" {
 
 // Allow workers to view all resources but not modify
 resource "google_project_iam_member" "worker-icompute-viewer" {
-  role   = "roles/compute.viewer"
-  member = "serviceAccount:${google_service_account.k8s-worker.email}"
+  project = var.project_id
+  role    = "roles/compute.viewer"
+  member  = "serviceAccount:${google_service_account.k8s-worker.email}"
 }
 
 // Worker Instances
