@@ -97,8 +97,9 @@ resource "google_compute_region_instance_group_manager" "masters" {
   target_pools       = [google_compute_target_pool.masters-pool.self_link]
 
   update_policy {
-    type           = "OPPORTUNISTIC"
-    minimal_action = "REPLACE"
+    type                           = "PROACTIVE"
+    minimal_action                 = "REFRESH"
+    most_disruptive_allowed_action = "REFRESH"
   }
 
   version {
