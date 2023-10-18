@@ -9,10 +9,23 @@ resource "google_service_account_key" "k8s-worker-key" {
   public_key_type    = "TYPE_X509_PEM_FILE"
 }
 
-// Allow workers to view all resources but not modify
-resource "google_project_iam_member" "worker-icompute-viewer" {
+// Minimally privileged service account as documented here:
+// https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#service-account
+resource "google_project_iam_member" "worker_metric_writer" {
   project = var.project_id
-  role    = "roles/compute.viewer"
+  role    = "roles/monitoring.metricWriter"
+  member  = "serviceAccount:${google_service_account.k8s-worker.email}"
+}
+
+resource "google_project_iam_member" "worker_monitoring_viewer" {
+  project = var.project_id
+  role    = "roles/monitoring.viewer"
+  member  = "serviceAccount:${google_service_account.k8s-worker.email}"
+}
+
+resource "google_project_iam_member" "worker_log_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.k8s-worker.email}"
 }
 
@@ -39,8 +52,15 @@ resource "google_compute_instance_template" "worker" {
   }
 
   service_account {
-    email  = google_service_account.k8s-worker.email
-    scopes = ["compute-ro", "storage-ro"]
+    email = google_service_account.k8s-worker.email
+    // The service accounts documentation explains that access scopes are the
+    // legacy method of specifying permissions for your instance. To follow
+    // best practices you should create a dedicated service account with the
+    // minimum permissions the VM requires. To use a dedicated service account
+    // this field should be configured as a list containing the cloud-platform
+    // scope.
+    // https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam
+    scopes = ["cloud-platform"]
   }
 
   tags = concat(["worker-${var.cluster_name}", "kubelet"], var.cluster_instance_tags)
