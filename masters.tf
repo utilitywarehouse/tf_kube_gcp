@@ -116,6 +116,48 @@ resource "google_compute_forwarding_rule" "master-lb" {
   port_range            = "443"
 }
 
+// Private Load Balancer
+resource "google_compute_region_instance_group_manager" "control-plane" {
+  name               = "control-plane-group-manager-${var.cluster_name}"
+  base_instance_name = "master-${var.cluster_name}"
+  region             = var.region
+  target_size        = var.master_instance_count
+
+  version {
+    name              = "masters"
+    instance_template = google_compute_instance_template.master.self_link
+  }
+}
+
+resource "google_compute_forwarding_rule" "control-plane-lb" {
+  name                  = "control-plane-lb-${var.cluster_name}"
+  backend_service       = google_compute_region_backend_service.control-plane-backend.id
+  network               = var.network_link
+  subnetwork            = var.subnetwork_link
+  load_balancing_scheme = "INTERNAL"
+  ip_protocol           = "TCP"
+  ports                 = ["443"]
+}
+
+resource "google_compute_region_backend_service" "control-plane-backend" {
+  name                  = "control-plane-backend-${var.cluster_name}"
+  protocol              = "TCP"
+  load_balancing_scheme = "INTERNAL"
+  region                = var.region
+  health_checks         = [google_compute_region_health_check.control-plane-health-check.id]
+  backend {
+    group = google_compute_region_instance_group_manager.control-plane.instance_group
+  }
+}
+
+resource "google_compute_region_health_check" "control-plane-health-check" {
+  name   = "control-plane-health-check-${var.cluster_name}"
+  region = var.region
+  tcp_health_check {
+    port = 443
+  }
+}
+
 // Dns
 resource "google_dns_record_set" "master" {
   name = "lb.master.${var.dns_domain}."
