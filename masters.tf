@@ -116,19 +116,6 @@ resource "google_compute_forwarding_rule" "master-lb" {
   port_range            = "443"
 }
 
-// Private Load Balancer
-resource "google_compute_region_instance_group_manager" "control_plane" {
-  name               = "control-plane-group-manager-${var.cluster_name}"
-  base_instance_name = "master-${var.cluster_name}"
-  region             = var.region
-  target_size        = var.master_instance_count
-
-  version {
-    name              = "masters"
-    instance_template = google_compute_instance_template.master.self_link
-  }
-}
-
 resource "google_compute_forwarding_rule" "control_plane_lb" {
   name                  = "control-plane-lb-${var.cluster_name}"
   backend_service       = google_compute_region_backend_service.control_plane_backend.id
@@ -146,7 +133,7 @@ resource "google_compute_region_backend_service" "control_plane_backend" {
   region                = var.region
   health_checks         = [google_compute_region_health_check.control_plane_health_check.id]
   backend {
-    group = google_compute_region_instance_group_manager.control_plane.instance_group
+    group = google_compute_region_instance_group_manager.masters.instance_group
   }
 }
 
