@@ -117,7 +117,7 @@ resource "google_compute_forwarding_rule" "master-lb" {
 }
 
 // Private Load Balancer
-resource "google_compute_region_instance_group_manager" "control-plane" {
+resource "google_compute_region_instance_group_manager" "control_plane" {
   name               = "control-plane-group-manager-${var.cluster_name}"
   base_instance_name = "master-${var.cluster_name}"
   region             = var.region
@@ -129,9 +129,9 @@ resource "google_compute_region_instance_group_manager" "control-plane" {
   }
 }
 
-resource "google_compute_forwarding_rule" "control-plane-lb" {
+resource "google_compute_forwarding_rule" "control_plane_lb" {
   name                  = "control-plane-lb-${var.cluster_name}"
-  backend_service       = google_compute_region_backend_service.control-plane-backend.id
+  backend_service       = google_compute_region_backend_service.control_plane_backend.id
   network               = var.network_link
   subnetwork            = var.subnetwork_link
   load_balancing_scheme = "INTERNAL"
@@ -139,18 +139,18 @@ resource "google_compute_forwarding_rule" "control-plane-lb" {
   ports                 = ["443"]
 }
 
-resource "google_compute_region_backend_service" "control-plane-backend" {
+resource "google_compute_region_backend_service" "control_plane_backend" {
   name                  = "control-plane-backend-${var.cluster_name}"
   protocol              = "TCP"
   load_balancing_scheme = "INTERNAL"
   region                = var.region
-  health_checks         = [google_compute_region_health_check.control-plane-health-check.id]
+  health_checks         = [google_compute_region_health_check.control_plane_health_check.id]
   backend {
-    group = google_compute_region_instance_group_manager.control-plane.instance_group
+    group = google_compute_region_instance_group_manager.control_plane.instance_group
   }
 }
 
-resource "google_compute_region_health_check" "control-plane-health-check" {
+resource "google_compute_region_health_check" "control_plane_health_check" {
   name   = "control-plane-health-check-${var.cluster_name}"
   region = var.region
   tcp_health_check {
