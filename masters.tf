@@ -116,14 +116,25 @@ resource "google_compute_forwarding_rule" "master-lb" {
   port_range            = "443"
 }
 
+resource "google_compute_address" "control_plane" {
+  name         = "control-plane-address-${var.cluster_name}"
+  address_type = "INTERNAL"
+  subnetwork   = var.subnetwork_link
+}
+
 resource "google_compute_forwarding_rule" "control_plane_lb" {
   name                  = "control-plane-lb-${var.cluster_name}"
   backend_service       = google_compute_region_backend_service.control_plane_backend.id
-  network               = var.network_link
-  subnetwork            = var.subnetwork_link
+  subnetwork            = google_compute_address.control_plane.subnetwork
+  ip_address            = google_compute_address.control_plane.id
   load_balancing_scheme = "INTERNAL"
   ip_protocol           = "TCP"
   ports                 = ["443"]
+  lifecycle {
+    replace_triggered_by = [
+      google_compute_address.control_plane.id,
+    ]
+  }
 }
 
 resource "google_compute_region_backend_service" "control_plane_backend" {
@@ -153,7 +164,7 @@ resource "google_dns_record_set" "master" {
 
   managed_zone = var.dns_zone
 
-  rrdatas = [google_compute_forwarding_rule.control_plane_lb.ip_address]
+  rrdatas = [google_compute_forwarding_rule.master-lb.ip_address]
 }
 
 // Firewall Rules
