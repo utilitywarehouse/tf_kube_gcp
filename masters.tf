@@ -153,7 +153,7 @@ resource "google_dns_record_set" "master" {
 
   managed_zone = var.dns_zone
 
-  rrdatas = [google_compute_forwarding_rule.master-lb.ip_address]
+  rrdatas = [google_compute_forwarding_rule.control_plane_lb.ip_address]
 }
 
 // Firewall Rules
