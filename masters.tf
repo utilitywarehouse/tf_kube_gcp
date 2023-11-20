@@ -85,16 +85,11 @@ resource "google_compute_instance_template" "master" {
   }
 }
 
-resource "google_compute_target_pool" "masters-pool" {
-  name = "masters-pool-${var.cluster_name}"
-}
-
 resource "google_compute_region_instance_group_manager" "masters" {
   name               = "masters-group-manager-${var.cluster_name}"
   base_instance_name = "master-${var.cluster_name}"
   region             = var.region
   target_size        = var.master_instance_count
-  target_pools       = [google_compute_target_pool.masters-pool.self_link]
 
   update_policy {
     type           = "OPPORTUNISTIC"
@@ -108,14 +103,6 @@ resource "google_compute_region_instance_group_manager" "masters" {
 }
 
 // Load Balancer
-resource "google_compute_forwarding_rule" "master-lb" {
-  name                  = "master-lb-${var.cluster_name}"
-  target                = google_compute_target_pool.masters-pool.self_link
-  load_balancing_scheme = "EXTERNAL"
-  ip_protocol           = "TCP"
-  port_range            = "443"
-}
-
 resource "google_compute_address" "control_plane" {
   name         = "control-plane-address-${var.cluster_name}"
   address_type = "INTERNAL"
