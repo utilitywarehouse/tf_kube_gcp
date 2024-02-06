@@ -124,7 +124,7 @@ resource "google_compute_firewall" "allow-workers-to-cfssl" {
   // 9080 for promtail, 8888-9 for certs, 9100 for node exporter
   allow {
     protocol = "tcp"
-    ports    = ["9080", "8888", "8889", "9100"]
+    ports    = ["8080", "9080", "8888", "8889", "9100"]
   }
 
   source_tags = ["worker-${var.cluster_name}"]
