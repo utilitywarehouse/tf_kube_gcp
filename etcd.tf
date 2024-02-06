@@ -140,7 +140,7 @@ resource "google_compute_firewall" "allow-workerss-to-etcds" {
   // promtail, node exporter and etcd metrics
   allow {
     protocol = "tcp"
-    ports    = ["9080", "9100", "9378"]
+    ports    = ["8080", "9080", "9100", "9378"]
   }
 
   source_tags = ["worker-${var.cluster_name}"]
