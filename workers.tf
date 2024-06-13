@@ -82,8 +82,9 @@ resource "google_compute_region_instance_group_manager" "workers" {
   target_size        = var.worker_instance_count
 
   update_policy {
-    type           = "OPPORTUNISTIC"
-    minimal_action = "REPLACE"
+    type                           = "PROACTIVE"
+    minimal_action                 = "REFRESH"
+    most_disruptive_allowed_action = "REFRESH"
   }
 
   version {
