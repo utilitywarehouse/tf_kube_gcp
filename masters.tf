@@ -132,6 +132,10 @@ resource "google_compute_region_backend_service" "control_plane_backend" {
   health_checks         = [google_compute_region_health_check.control_plane_health_check.id]
   backend {
     group = google_compute_region_instance_group_manager.masters.instance_group
+    # https://github.com/hashicorp/terraform-provider-google/issues/17257
+    # Default value was changed to "UTILIZATION", so setting the "CONNECTION"
+    # value back manually
+    balancing_mode = "CONNECTION"
   }
 }
 
