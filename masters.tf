@@ -92,8 +92,9 @@ resource "google_compute_region_instance_group_manager" "masters" {
   target_size        = var.master_instance_count
 
   update_policy {
-    type           = "OPPORTUNISTIC"
-    minimal_action = "REPLACE"
+    type                           = "PROACTIVE"
+    minimal_action                 = "REFRESH"
+    most_disruptive_allowed_action = "REFRESH"
   }
 
   version {
