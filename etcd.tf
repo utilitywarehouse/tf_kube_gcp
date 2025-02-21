@@ -20,7 +20,8 @@ resource "google_compute_disk" "etcd-data" {
   }
 
   lifecycle {
-    ignore_changes = [snapshot]
+    ignore_changes  = [snapshot]
+    prevent_destroy = true
   }
 }
 

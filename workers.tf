@@ -90,6 +90,10 @@ resource "google_compute_region_instance_group_manager" "workers" {
     name              = "workers"
     instance_template = google_compute_instance_template.worker.self_link
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 // Firewall Rules
