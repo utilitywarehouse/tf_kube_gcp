@@ -11,6 +11,10 @@ resource "google_compute_disk" "cfssl-data" {
   size = 5
   type = "pd-standard"
 
+  lifecycle {
+    prevent_destroy = true
+  }
+
   // The value can only contain lowercase letters, numeric characters, underscores and dashes
   labels = {
     name      = "cfssl-${var.cluster_name}-data-vol-0"
@@ -29,7 +33,7 @@ resource "random_string" "cfssl_suffix" {
   }
 }
 
-// reserve Ip address
+// reserve IP address
 resource "google_compute_address" "cfssl_server_address" {
   name         = "cfssl-server-address-0-${var.cluster_name}"
   address_type = "INTERNAL"
@@ -133,7 +137,6 @@ resource "google_compute_firewall" "allow-workers-to-cfssl" {
   target_tags = ["cfssl-${var.cluster_name}"]
 }
 
-// Dns
 resource "google_dns_record_set" "cfssl" {
   name = "cfssl.${var.dns_domain}."
   type = "A"

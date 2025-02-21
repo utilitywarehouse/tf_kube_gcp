@@ -100,6 +100,10 @@ resource "google_compute_region_instance_group_manager" "masters" {
     name              = "masters"
     instance_template = google_compute_instance_template.master.self_link
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 // Load Balancer
