@@ -137,10 +137,10 @@ resource "google_compute_firewall" "allow-workerss-to-etcds" {
   name    = "allow-workers-to-etcds-${var.cluster_name}"
   network = var.network_link
 
-  // promtail, node exporter and etcd metrics
+  // vector, node exporter and etcd metrics
   allow {
     protocol = "tcp"
-    ports    = ["9080", "9100", "9378"]
+    ports    = ["8080", "9100", "9378"]
   }
 
   source_tags = ["worker-${var.cluster_name}"]
