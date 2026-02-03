@@ -53,6 +53,23 @@ resource "google_compute_address" "etcd_addresses" {
   address      = var.etcd_addresses[count.index]
 }
 
+// Instance Reservations
+resource "google_compute_reservation" "etcd" {
+  count = length(var.available_zones)
+
+  name                          = "etcd-${var.cluster_name}-${count.index}"
+  zone                          = var.available_zones[count.index]
+  specific_reservation_required = true
+
+  specific_reservation {
+    count = 1
+
+    instance_properties {
+      machine_type = var.etcd_machine_type
+    }
+  }
+}
+
 // Instances
 resource "google_compute_instance" "etcd" {
   count       = var.etcd_instance_count
@@ -100,6 +117,14 @@ resource "google_compute_instance" "etcd" {
   service_account {
     email  = google_service_account.etcd.email
     scopes = []
+  }
+
+  reservation_affinity {
+    type = "SPECIFIC_RESERVATION"
+    specific_reservation {
+      key    = "compute.googleapis.com/reservation-name"
+      values = [google_compute_reservation.etcd[count.index].name]
+    }
   }
 }
 

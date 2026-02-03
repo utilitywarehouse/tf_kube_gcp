@@ -41,6 +41,20 @@ resource "google_compute_address" "cfssl_server_address" {
   address      = var.cfssl_server_address
 }
 
+// Instance Reservation
+resource "google_compute_reservation" "cfssl" {
+  name                          = "cfssl-${var.cluster_name}"
+  zone                          = var.available_zones[0]
+  specific_reservation_required = true
+
+  specific_reservation {
+    count = 1
+    instance_properties {
+      machine_type = var.cfssl_machine_type
+    }
+  }
+}
+
 // Instance
 resource "google_compute_instance" "cfssl" {
   name        = "cfssl-${var.cluster_name}-${random_string.cfssl_suffix.result}"
@@ -87,6 +101,14 @@ resource "google_compute_instance" "cfssl" {
   service_account {
     email  = google_service_account.cfssl.email
     scopes = []
+  }
+
+  reservation_affinity {
+    type = "SPECIFIC_RESERVATION"
+    specific_reservation {
+      key    = "compute.googleapis.com/reservation-name"
+      values = [google_compute_reservation.cfssl.name]
+    }
   }
 }
 
