@@ -1,10 +1,8 @@
-// IAM and Service Account
 resource "google_service_account" "cfssl" {
   account_id   = "cfssl-${var.cluster_name}"
   display_name = "service account for cfssl instance"
 }
 
-// Volume
 resource "google_compute_disk" "cfssl-data" {
   name = "cfssl-data-${var.cluster_name}"
   zone = var.available_zones[0]
@@ -33,7 +31,6 @@ resource "random_string" "cfssl_suffix" {
   }
 }
 
-// reserve IP address
 resource "google_compute_address" "cfssl_server_address" {
   name         = "cfssl-server-address-0-${var.cluster_name}"
   address_type = "INTERNAL"
@@ -41,7 +38,6 @@ resource "google_compute_address" "cfssl_server_address" {
   address      = var.cfssl_server_address
 }
 
-// Instance Reservation
 resource "google_compute_reservation" "cfssl" {
   name                          = "cfssl-${var.cluster_name}"
   zone                          = var.available_zones[0]
@@ -55,7 +51,6 @@ resource "google_compute_reservation" "cfssl" {
   }
 }
 
-// Instance
 resource "google_compute_instance" "cfssl" {
   name        = "cfssl-${var.cluster_name}-${random_string.cfssl_suffix.result}"
   description = "cfssl box"
@@ -112,7 +107,6 @@ resource "google_compute_instance" "cfssl" {
   }
 }
 
-// Firewall Rules
 resource "google_compute_firewall" "allow-etcd-to-cfssl" {
   name    = "allow-etcd-to-cfssl-${var.cluster_name}"
   network = var.network_link

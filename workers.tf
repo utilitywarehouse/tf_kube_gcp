@@ -1,4 +1,3 @@
-// IAM and Service Account
 resource "google_service_account" "k8s-worker" {
   account_id   = "worker-${var.cluster_name}"
   display_name = "K8s worker service account"
@@ -29,7 +28,6 @@ resource "google_project_iam_member" "worker_log_writer" {
   member  = "serviceAccount:${google_service_account.k8s-worker.email}"
 }
 
-// Worker Instances
 resource "google_compute_instance_template" "worker" {
   name_prefix          = "worker-${var.cluster_name}-"
   instance_description = "worker k8s instance"
@@ -96,7 +94,6 @@ resource "google_compute_region_instance_group_manager" "workers" {
   }
 }
 
-// Firewall Rules
 resource "google_compute_firewall" "allow-workers-to-talk" {
   name    = "allow-workers-to-talk-${var.cluster_name}"
   network = var.network_link

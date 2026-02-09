@@ -1,10 +1,8 @@
-// IAM and Service Account
 resource "google_service_account" "etcd" {
   account_id   = "etcd-${var.cluster_name}"
   display_name = "service account for etcd instances"
 }
 
-// Volumes
 resource "google_compute_disk" "etcd-data" {
   count = var.etcd_instance_count
   name  = "etcd-data-${count.index}-${var.cluster_name}"
@@ -44,7 +42,6 @@ resource "random_string" "r" {
   }
 }
 
-// reserve Ip addresses
 resource "google_compute_address" "etcd_addresses" {
   count        = var.etcd_instance_count
   name         = "etcd-address-${count.index}-${var.cluster_name}"
@@ -53,7 +50,6 @@ resource "google_compute_address" "etcd_addresses" {
   address      = var.etcd_addresses[count.index]
 }
 
-// Instance Reservations
 resource "google_compute_reservation" "etcd" {
   count = length(var.available_zones)
 
@@ -70,7 +66,6 @@ resource "google_compute_reservation" "etcd" {
   }
 }
 
-// Instances
 resource "google_compute_instance" "etcd" {
   count       = var.etcd_instance_count
   name        = "etcd-${count.index}-${var.cluster_name}-${random_string.r[count.index].result}"
@@ -128,7 +123,6 @@ resource "google_compute_instance" "etcd" {
   }
 }
 
-// Firewall Rules
 resource "google_compute_firewall" "allow-etcds-to-talk" {
   name    = "allow-etcds-to-talk-${var.cluster_name}"
   network = var.network_link
@@ -175,7 +169,6 @@ resource "google_compute_firewall" "allow-workerss-to-etcds" {
   target_tags = ["etcd-${var.cluster_name}"]
 }
 
-// dns
 resource "google_dns_record_set" "etcd-by-instance" {
   count = var.etcd_instance_count
   name  = "${count.index}.etcd.${var.dns_domain}."
