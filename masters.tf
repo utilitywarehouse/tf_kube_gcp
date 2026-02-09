@@ -1,4 +1,3 @@
-// IAM and Service Account
 resource "google_service_account" "k8s-master" {
   account_id   = "master-${var.cluster_name}"
   display_name = "K8s master service account"
@@ -46,7 +45,6 @@ resource "google_project_iam_member" "master-service-account-user" {
   member  = "serviceAccount:${google_service_account.k8s-master.email}"
 }
 
-// Master Instances
 resource "google_compute_instance_template" "master" {
   name_prefix          = "master-${var.cluster_name}-"
   instance_description = "master k8s instance"
@@ -151,7 +149,6 @@ resource "google_compute_region_health_check" "control_plane_health_check" {
   }
 }
 
-// Dns
 resource "google_dns_record_set" "master" {
   name = "lb.master.${var.dns_domain}."
   type = "A"
@@ -162,7 +159,6 @@ resource "google_dns_record_set" "master" {
   rrdatas = [google_compute_address.control_plane.address]
 }
 
-// Firewall Rules
 resource "google_compute_firewall" "allow-masters-to-talk" {
   name    = "allow-masters-to-talk-${var.cluster_name}"
   network = var.network_link
